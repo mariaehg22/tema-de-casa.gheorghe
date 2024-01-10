@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Disciplina {
+    char nume[32];
+    char cadru_didactic[32];
+    int promovati; // Number of promoted students
+    int nepromovati; // Number of non-promoted students
+    struct Student* studenti; // Array of students
+} Disciplina;
+
+typedef struct Student {
+    char nume[32];
+    int nota;
+} Student;
+
+Disciplina* citire_disciplina() {
+    Disciplina* disciplina = (Disciplina*)malloc(sizeof(Disciplina));
+
+    int ok = 1;
+
+    printf("Numele disciplinei: ");
+    scanf("%s", disciplina->nume);
+
+    if (strlen(disciplina->nume) == 0) {
+        ok = 0;
+    }
+
+    printf("Numele cadrului didactic: ");
+    scanf("%s", disciplina->cadru_didactic);
+
+    if (strlen(disciplina->cadru_didactic) == 0) {
+        ok = 0;
+    }
+
+    printf("Promovati: ");
+    scanf("%d", &disciplina->promovati);
+
+    if (disciplina->promovati < 0) {
+        ok = 0;
+    }
+
+    printf("Nepromovati: ");
+    scanf("%d", &disciplina->nepromovati);
+
+    if (disciplina->nepromovati < 0) {
+        ok = 0;
+    }
+
+    if (ok) {
+        // Alociază memorie pentru array-ul de studenți
+        disciplina->studenti = (Student*)malloc(disciplina->promovati * sizeof(Student));
+
+        // Citește studenții promovați
+        for (int i = 0; i < disciplina->promovati; i++) {
+            printf("Student promovat [%d]: ", i + 1);
+            scanf("%s %d", disciplina->studenti[i].nume, &disciplina->studenti[i].nota);
+        }
+
+        // Citește studenții nepromovați
+        for (int i = 0; i < disciplina->nepromovati; i++) {
+            printf("Student nepromovat [%d]: ", i + 1);
+            scanf("%s %d", disciplina->studenti[i + disciplina->promovati].nume, &disciplina->studenti[i + disciplina->promovati].nota);
+        }
+    }
+
+    return disciplina;
+}
+
+void afisare_disciplina(Disciplina* disciplina) {
+    if (disciplina == NULL) {
+        return;
+    }
+
+    printf("Disciplina: %s\n", disciplina->nume);
+    printf("Cadru didactic: %s\n", disciplina->cadru_didactic);
+
+    printf("Promovati:");
+    for (int i = 0; i < disciplina->promovati; i++) {
+        printf("\t%s (%d)\n", disciplina->studenti[i].nume, disciplina->studenti[i].nota);
+    }
+
+    printf("Nepromovati:");
+    for (int i = 0; i < disciplina->nepromovati; i++) {
+        printf("\t%s (%d)\n", disciplina->studenti[i + disciplina->promovati].nume, disciplina->studenti[i + disciplina->promovati].nota);
+    }
+}
+
